@@ -32,7 +32,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "PyQt5",
-        'googletrans'
+        'deep-translator'
     ],
     entry_points={
         'console_scripts': [
