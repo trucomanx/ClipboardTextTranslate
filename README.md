@@ -1,0 +1,2 @@
+# ClipboardTextTranslate
+ClipboardTextTranslate
