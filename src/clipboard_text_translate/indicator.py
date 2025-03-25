@@ -161,11 +161,12 @@ def show_about_window(data, logo_path):
     dialog = AboutWindow(data, logo_path)
     dialog.exec_()
 
+
 class MessageDialog(QDialog):
     """Display a message with copyable text and an OK button"""
-    def __init__(self, message, width=600, height=300, parent=None):
+    def __init__(self, message, width=600, height=300, parent=None, read_only=False, title="Message"):
         super().__init__(parent)
-        self.setWindowTitle("Message")
+        self.setWindowTitle(title)
         self.resize(width, height)
         
         # Create layout
@@ -173,21 +174,31 @@ class MessageDialog(QDialog):
         layout.setContentsMargins(10, 10, 10, 10)
         
         # Create text view for displaying the message
-        text_edit = QTextEdit()
-        text_edit.setPlainText(message)
-        text_edit.setReadOnly(True)
-        text_edit.setLineWrapMode(QTextEdit.WidgetWidth)
+        self.text_edit = QTextEdit()
+        self.text_edit.setPlainText(message)
+        self.text_edit.setReadOnly(read_only)
+        self.text_edit.setLineWrapMode(QTextEdit.WidgetWidth)
         
         # Add text view to a scroll area
         scroll_area = QScrollArea()
-        scroll_area.setWidget(text_edit)
+        scroll_area.setWidget(self.text_edit)
         scroll_area.setWidgetResizable(True)
         layout.addWidget(scroll_area)
+        
+        # Copy to clipboard Button
+        copy_button = QPushButton("Copy to clipboard")
+        copy_button.clicked.connect(self.copy_to_clipboard)
+        layout.addWidget(copy_button)
         
         # OK Button
         ok_button = QPushButton("OK")
         ok_button.clicked.connect(self.accept)
         layout.addWidget(ok_button)
+
+    def copy_to_clipboard(self):
+        """Copy the text from the text edit to clipboard"""
+        clipboard = QApplication.clipboard()
+        clipboard.setText(self.text_edit.toPlainText())
 
 def show_message(message, width=600, height=300):
     dialog = MessageDialog(message, width, height)
@@ -265,7 +276,7 @@ class ClipboardTextTranslate(QApplication):
         translate_data = config_data.get("GoogleTranslateLauncher", {})        
         for label, lang_code in translate_data.items():
             # Translate with google
-            action = QAction(label, self.menu)
+            action = QAction("\t"+label, self.menu)
             action.setIcon(QIcon.fromTheme("emblem-default"))
             action.triggered.connect(lambda checked, code=lang_code: on_action_googletranslate(code))
             self.translate_menu.addAction(action)
@@ -281,7 +292,7 @@ class ClipboardTextTranslate(QApplication):
         raw_translate_data = config_data.get("RawTranslateLauncher", {})
         for label, lang_code in raw_translate_data.items():
             # Translate with google
-            action = QAction(label, self.menu)
+            action = QAction("\t"+label, self.menu)
             action.setIcon(QIcon.fromTheme("emblem-default"))
             action.triggered.connect(lambda checked, code=lang_code: on_action_rawtranslate(code))
             self.raw_translate_menu.addAction(action)
@@ -294,14 +305,15 @@ class ClipboardTextTranslate(QApplication):
         # Create program_information_submenu
         self.program_info_submenu = QMenu("🛠️ Program usage information")
         
+        
         # Add actions to program_information_submenu
-        edit_config_action = QAction("Open config file", self.menu)
+        edit_config_action = QAction("\tOpen config file", self.menu)
         edit_config_action.setIcon(QIcon.fromTheme("applications-utilities"))
         edit_config_action.triggered.connect(edit_config)
         self.program_info_submenu.addAction(edit_config_action)
         
         # Add heelp
-        url_help_action = QAction("Open url help", self.menu)
+        url_help_action = QAction("\tOpen url help", self.menu)
         url_help_action.setIcon(QIcon.fromTheme("help-contents"))
         url_help_action.triggered.connect(open_url_help)
         self.program_info_submenu.addAction(url_help_action)
