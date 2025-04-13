@@ -1,13 +1,17 @@
-import sys
-import json
-import signal
+#!/usr/bin/python3
+
 from PyQt5.QtWidgets import QApplication, QVBoxLayout, QLabel, QScrollArea, QPushButton, QTextEdit, QDialog, QSystemTrayIcon, QMenu, QAction
 from PyQt5.QtGui import QIcon, QPixmap, QDesktopServices
 from PyQt5.QtCore import QStandardPaths, Qt,QUrl
+
+import sys
+import json
+import signal
 import platform
 import os
 
 
+from clipboard_text_translate.desktop import create_desktop_file, create_desktop_directory, create_desktop_menu
 import clipboard_text_translate.modules.lib_files as lib_files
 import clipboard_text_translate.modules.lib_translate as lib_translate
 import clipboard_text_translate.about as about
@@ -352,7 +356,25 @@ class ClipboardTextTranslate(QApplication):
 
 def main():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
+    
+    create_desktop_directory()    
+    create_desktop_menu()
+    create_desktop_file('~/.local/share/applications')
+    
+    for n in range(len(sys.argv)):
+        if sys.argv[n] == "--autostart":
+            create_desktop_directory(overwrite = True)
+            create_desktop_menu(overwrite = True)
+            create_desktop_file('~/.config/autostart', overwrite=True)
+            return
+        if sys.argv[n] == "--applications":
+            create_desktop_directory(overwrite = True)
+            create_desktop_menu(overwrite = True)
+            create_desktop_file('~/.local/share/applications', overwrite=True)
+            return
+    
     app = ClipboardTextTranslate(sys.argv)
+    app.setApplicationName(about.__package__) # xprop WM_CLASS # *.desktop -> StartupWMClass  
     sys.exit(app.exec_())
 
 if __name__ == "__main__":

@@ -12,10 +12,13 @@ To install the package from `PyPI`, follow the instructions below:
 
 
 ```bash
+python -m pip install --upgrade pip
+python -m pip install --upgrade supertools
+
 pip install --upgrade clipboard-text-translate
 ```
 
-Execute `which clipboard-text-translate-indicator` to see where it was installed, probably in `/home/USERNAME/.local/bin/clipboard-text-translate-indicator`.
+Execute `pip show clipboard-text-correction` to see where it was installed.
 
 #### Using
 
@@ -26,21 +29,27 @@ clipboard-text-translate-indicator
 ```
 
 
-### 1.2. Install from PyPI and add to Linux start session
-Install `clipboard-text-translate` from `pypi` and add the program to the bar indicator on Linux startup session.
+### 1.2. Add the program to Linux start session
+
+Add the program to the bar indicator on Linux startup session.
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/trucomanx/ClipboardTextTranslate/main/install_linux_indicator_session.sh | sh
+clipboard-text-translate-indicator --autostart
 ```
 
+## 2 Uninstall
 
-## 2. Buy me a coffee
+```bash
+pip uninstall clipboard-text-correction
+```
+
+## 3. Buy me a coffee
 
 If you find this tool useful and would like to support its development, you can buy me a coffee!  
 Your donations help keep the project running and improve future updates.  
 
 [☕ Buy me a coffee](https://ko-fi.com/trucomanx) 
 
-## 3. License
+## 4. License
 
 This project is licensed under the GPL license. See the `LICENSE` file for more details.
