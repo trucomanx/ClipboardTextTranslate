@@ -1,6 +1,6 @@
 # about.py
 
-__version__ = "0.1.6"
+__version__ = "0.1.7"
 __package__ = "clipboard_text_translate"
 __linux_indicator__ = "clipboard-text-translate-indicator"
 __author__ = "Fernando Pujaico Rivera" 
